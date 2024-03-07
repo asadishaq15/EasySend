@@ -9,6 +9,7 @@ const Form = () => {
     company: '',
     department: '',
     message: '',
+    file: null 
   });
 
   const handleInputChange =(e)=>{
@@ -18,20 +19,38 @@ const Form = () => {
       [name]:value,
     })
   }
+  const handleFileChange = (e) => {
+    setFormData({
+      ...formData,
+      file: e.target.files[0] // Store selected file
+    });
+  };
 
 
-const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Submitting contact form:', formData);
+
+    const formDataToSend = new FormData();
+    formDataToSend.append('name', formData.name);
+    formDataToSend.append('email', formData.email);
+    formDataToSend.append('phone', formData.phone);
+    formDataToSend.append('company', formData.company);
+    formDataToSend.append('department', formData.department);
+    formDataToSend.append('message', formData.message);
+    formDataToSend.append('file', formData.file); 
 
     try {
-      const response = await axios.post('http://localhost:3001/contact-form', formData);
+      const response = await axios.post('http://localhost:3001/contact-form', formDataToSend, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
 
       console.log('Response status:', response.status);
 
       const data = response.data;
 
-      if (data.status === 422 || !data) {
+      if (data.status === 'error') {
         window.alert('Form submission unsuccessful');
         console.log('Invalid form submission');
       } else {
@@ -43,8 +62,6 @@ const handleSubmit = async (e) => {
       alert('Error submitting contact form.');
     }
   };
-
-
   return (
     <div className="form-container">
       <h2>Contact Us</h2>
@@ -111,6 +128,16 @@ const handleSubmit = async (e) => {
             onChange={handleInputChange}
             rows={6}
             required
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="file">Attach File:</label>
+          <input
+            type="file"
+            id="file"
+            name="file"
+            onChange={handleFileChange}
+            accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
           />
         </div>
         <button type="submit">Submit</button>
