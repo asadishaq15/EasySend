@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const nodemailer = require('nodemailer');
-const cors = require('cors'); // Added for path manipulation
+const cors = require('cors'); 
 const app = express();
 require("dotenv").config();
 
@@ -35,9 +35,9 @@ app.post('/contact-form', (req, res) => {
     ;
 
   const mailOptions = {
-    from: 'asadishaq013@gmail.com',
-    to: 'asadishaq392@gmail.com', // Replace with the contact form recipient's email address
-    subject: 'Contact Us Form Submission',
+    from: 'example@gmail.com', //sender
+    to: 'example@gmail.com', //Recipient
+    subject: 'Form Submission',
     html: formattedEmail,
   };
 
