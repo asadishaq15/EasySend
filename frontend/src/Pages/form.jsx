@@ -29,28 +29,16 @@ const Form = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const formDataToSend = new FormData();
-    formDataToSend.append('name', formData.name);
-    formDataToSend.append('email', formData.email);
-    formDataToSend.append('phone', formData.phone);
-    formDataToSend.append('company', formData.company);
-    formDataToSend.append('department', formData.department);
-    formDataToSend.append('message', formData.message);
-    formDataToSend.append('file', formData.file); 
-
+    console.log('Submitting form data:', formData);
+  
     try {
-      const response = await axios.post('http://localhost:3001/contact-form', formDataToSend, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-
+      const response = await axios.post('http://localhost:3001/contact-form', formData);
+  
       console.log('Response status:', response.status);
-
+  
       const data = response.data;
-
-      if (data.status === 'error') {
+  
+      if (data.status === 422 || !data) {
         window.alert('Form submission unsuccessful');
         console.log('Invalid form submission');
       } else {
@@ -59,9 +47,11 @@ const Form = () => {
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('Error submitting contact form.');
+      alert('Error submitting quote form.');
     }
   };
+
+  
   return (
     <div className="form-container">
       <h2>Contact Us</h2>
