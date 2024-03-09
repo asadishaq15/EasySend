@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios'; // Import axios for making HTTP requests
+import React, { useState } from 'react';
+import axios from 'axios';
 
 const Form = () => {
   const [formData, setFormData] = useState({
@@ -9,35 +9,27 @@ const Form = () => {
     company: '',
     department: '',
     message: '',
-    file: null 
   });
 
-  const handleInputChange =(e)=>{
-    const {name,value}=e.target;
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]:value,
-    })
-  }
-  const handleFileChange = (e) => {
-    setFormData({
-      ...formData,
-      file: e.target.files[0] // Store selected file
+      [name]: value,
     });
   };
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log('Submitting form data:', formData);
-  
+
     try {
       const response = await axios.post('http://localhost:3001/contact-form', formData);
-  
+
       console.log('Response status:', response.status);
-  
+
       const data = response.data;
-  
+
       if (data.status === 422 || !data) {
         window.alert('Form submission unsuccessful');
         console.log('Invalid form submission');
@@ -51,7 +43,6 @@ const Form = () => {
     }
   };
 
-  
   return (
     <div className="form-container">
       <h2>Contact Us</h2>
@@ -118,16 +109,6 @@ const Form = () => {
             onChange={handleInputChange}
             rows={6}
             required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="file">Attach File:</label>
-          <input
-            type="file"
-            id="file"
-            name="file"
-            onChange={handleFileChange}
-            accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
           />
         </div>
         <button type="submit">Submit</button>
